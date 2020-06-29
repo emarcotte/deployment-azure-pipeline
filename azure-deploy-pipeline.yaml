@@ -30,7 +30,7 @@ variables:
 stages:
 - stage: Deploy
   jobs:
-  - deployment: deploy-dev
+  - deployment: deployToEnvironment
     displayName: deploy application to dev
 
     condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/')))
