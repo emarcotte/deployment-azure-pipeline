@@ -17,37 +17,39 @@
 #   Runtime might fix with template files...
 
 parameters:
-  - name: deployEnvironment
-    displayName: Deploy Environment Name
-    type: string
-    values:
-      - emarcotte-dev
-      - emarcotte-prod
+- name: deployEnvironment
+  displayName: Deploy Environment Name
+  type: string
+  values:
+  - emarcotte-dev
+  - emarcotte-prod
 
 variables:
-  - template: ./azure-variables/${{ parameters.deployEnvironment }}.yaml
+- template: ./azure-variables/${{ parameters.deployEnvironment }}.yaml
 
-
-- stage: deploy
+stages:
+- stage: Deploy
   jobs:
-    - deployment: deploy-dev
-      displayName: deploy application to dev
+  - deployment: deploy-dev
+    displayName: deploy application to dev
 
-      pool:
-        vmImage: Ubuntu-latest
+    condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/')))
 
-      environment: $(k8sEndpoint)
+    pool:
+      vmImage: Ubuntu-latest
 
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - task: HelmDeploy@0
-                displayName: helm run
-                inputs:
-                  connectionType: Kubernetes Service Connection
-                  kubernetesServiceEndpoint: $(k8sEndpoint)
-                  namespace: $(k8sNamespace)
+    environment: $(k8sEndpoint)
 
-                  command: ls
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: HelmDeploy@0
+            displayName: helm run
+            inputs:
+              connectionType: Kubernetes Service Connection
+              kubernetesServiceEndpoint: $(k8sEndpoint)
+              namespace: $(k8sNamespace)
+
+              command: ls
 
