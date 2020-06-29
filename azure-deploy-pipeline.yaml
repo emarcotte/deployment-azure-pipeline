@@ -34,12 +34,26 @@ parameters:
   - emarcotte-dev
   - emarcotte-stage
 
+# This file isnt evaluated procedurally, but the parameters replacement is done
+# _before_ other replacements, so it makes sense to list parameters and
+# variable templates at the top to imply that they come first. Pay special
+# attention to the symbols used to extract variables, they influence when the
+# replacement happens.
+variables:
+- template: ./azure-variables/${{ parameters.deployEnvironment }}.yaml
+
+# Pull in the app source code repository
+resources:
+  repository:
+  - repository: AppRepo
+    endpoint: emarcotte-service-connection
+    name: emarcotte/deployment-app-1
+    type: github
+    ref: $(appVersion)
+
 # No triggers for now
 trigger: none
 pr: none
-
-variables:
-- template: ./azure-variables/${{ parameters.deployEnvironment }}.yaml
 
 stages:
 - stage: Deploy
@@ -60,11 +74,13 @@ stages:
       runOnce:
         deploy:
           steps:
+          - checkout: self
+          - checkout: AppRepo
 
           # Get the app source code from the given release
           - task: DownloadGitHubRelease@0
             inputs:
-              connections: emarcotte-service-connection
+              connection: emarcotte-service-connection
               userRepository: emarcotte/deployment-app-1
               defaultVersionType: Specific Version
               version: $(appVersion)
