@@ -1,7 +1,7 @@
 variables:
-- name: k8sEndpoint
+- name: k8sEnvironment
   value: emarcotte-k8s-sandbox
 - name: k8sNamespace
-  value: dev
-- name: k8sResource
-  value: dev
+  value: az-dev
+- name: k8sServiceConnection
+  value: emarcotte-k8s-sandbox-az-dev-1593445180019

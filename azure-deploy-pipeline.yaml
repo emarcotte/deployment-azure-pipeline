@@ -15,6 +15,10 @@
 # - Multiple environment sets (prod-a, prod-b, stage-a, stage-b, ...)
 #   Document as variable groups not easy (see 3702 issue above).
 #   Runtime might fix with template files...
+#
+# - Kube credentials could be managed externally possibly, environment
+# definitions don't actually need to have any content and can just be place
+# holders.
 
 parameters:
 - name: deployEnvironment
@@ -42,7 +46,9 @@ stages:
     pool:
       vmImage: Ubuntu-latest
 
-    environment: $(k8sEndpoint)
+    # This is just basic grouping of resources, doesn't _really_ afford any
+    # capabilities.
+    environment: $(k8sEnvironment)
 
     strategy:
       runOnce:
@@ -52,7 +58,7 @@ stages:
             displayName: helm run
             inputs:
               connectionType: Kubernetes Service Connection
-              kubernetesServiceEndpoint: $(k8sEndpoint)
+              kubernetesServiceEndpoint: $(k8sServiceConnection)
               namespace: $(k8sNamespace)
 
               command: ls
