@@ -19,6 +19,12 @@
 # - Kube credentials could be managed externally possibly, environment
 # definitions don't actually need to have any content and can just be place
 # holders.
+#
+# Environments:
+# - Top level environments dont really _do_ anything.
+# - They can have approvals tied to them
+# - Can have business hour and branch based filters for automatic safety checks
+# - Can have 'exlusive lock' to prevent overlapping deploys.
 
 parameters:
 - name: deployEnvironment
@@ -41,7 +47,7 @@ stages:
   - deployment: deployToEnvironment
     displayName: deploy application to dev
 
-    condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/')))
+    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
 
     pool:
       vmImage: Ubuntu-latest
@@ -54,6 +60,16 @@ stages:
       runOnce:
         deploy:
           steps:
+
+          # Get the app source code from the given release
+          - task: DownloadGitHubRelease@0
+            inputs:
+              connections: emarcotte-service-connection
+              userRepository: emarcotte/deployment-app-1
+              defaultVersionType: Specific Version
+              version: $(appVersion)
+
+          # Fake out a helm task for now.
           - task: HelmDeploy@0
             displayName: helm run
             inputs:

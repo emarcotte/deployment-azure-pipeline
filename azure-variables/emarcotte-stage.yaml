@@ -5,3 +5,6 @@ variables:
   value: az-stage
 - name: k8sServiceConnection
   value: emarcotte-k8s-sandbox-az-stage-1593445203089
+
+- name: appVersion
+  value: 1.0.6
