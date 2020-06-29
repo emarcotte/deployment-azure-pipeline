@@ -47,7 +47,7 @@ stages:
   - deployment: deployToEnvironment
     displayName: deploy application to dev
 
-    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/release'))
 
     pool:
       vmImage: Ubuntu-latest
