@@ -22,7 +22,12 @@ parameters:
   type: string
   values:
   - emarcotte-dev
-  - emarcotte-prod
+  - emarcotte-stage
+
+# No triggers for now
+trigger:
+pr:
+
 
 variables:
 - template: ./azure-variables/${{ parameters.deployEnvironment }}.yaml

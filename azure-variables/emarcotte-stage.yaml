@@ -2,6 +2,6 @@ variables:
 - name: k8sEndpoint
   value: emarcotte-k8s-sandbox
 - name: k8sNamespace
-  value: dev
+  value: stage
 - name: k8sResource
-  value: dev
+  value: stage
