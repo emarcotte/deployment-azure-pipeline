@@ -77,14 +77,6 @@ stages:
           - checkout: self
           - checkout: AppRepo
 
-          # Get the app source code from the given release
-          - task: DownloadGitHubRelease@0
-            inputs:
-              connection: emarcotte-service-connection
-              userRepository: emarcotte/deployment-app-1
-              defaultVersionType: Specific Version
-              version: $(appVersion)
-
           # Fake out a helm task for now.
           - task: HelmDeploy@0
             displayName: helm run
