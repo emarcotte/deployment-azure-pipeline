@@ -7,4 +7,4 @@ variables:
   value: emarcotte-k8s-sandbox-az-dev-1593445180019
 
 - name: appVersion
-  value: 1.0.6
+  value: v1.0.6
