@@ -1,0 +1,5 @@
+variables:
+  - name: k8sEndpoint
+    value: emarcotte-k8s-sandbox.prod
+  - name: k8sNamespace
+    value: prod

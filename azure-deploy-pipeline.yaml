@@ -1,0 +1,53 @@
+---
+# YAML reference:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema
+#
+# General info:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/process/environments?view=azure-devops
+#
+# Kube resource/environment references:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/process/environments-kubernetes?view=azure-devops
+#
+# Challenges:
+# https://github.com/MicrosoftDocs/azure-devops-docs/issues/3702
+# - Possible path: https://github.com/microsoft/azure-pipelines-yaml/blob/master/design/runtime-parameters.md
+#
+# - Multiple environment sets (prod-a, prod-b, stage-a, stage-b, ...)
+#   Document as variable groups not easy (see 3702 issue above).
+#   Runtime might fix with template files...
+
+parameters:
+  - name: deployEnvironment
+    displayName: Deploy Environment Name
+    type: string
+    values:
+      - emarcotte-dev
+      - emarcotte-prod
+
+variables:
+  - template: ./azure-variables/${{ parameters.deployEnvironment }}.yaml
+
+
+- stage: deploy
+  jobs:
+    - deployment: deploy-dev
+      displayName: deploy application to dev
+
+      pool:
+        vmImage: Ubuntu-latest
+
+      environment: $(k8sEndpoint)
+
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - task: HelmDeploy@0
+                displayName: helm run
+                inputs:
+                  connectionType: Kubernetes Service Connection
+                  kubernetesServiceEndpoint: $(k8sEndpoint)
+                  namespace: $(k8sNamespace)
+
+                  command: ls
+
