@@ -25,9 +25,8 @@ parameters:
   - emarcotte-stage
 
 # No triggers for now
-trigger:
-pr:
-
+trigger: none
+pr: none
 
 variables:
 - template: ./azure-variables/${{ parameters.deployEnvironment }}.yaml
