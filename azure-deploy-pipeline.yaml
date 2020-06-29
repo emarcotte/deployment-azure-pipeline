@@ -50,7 +50,7 @@ resources:
     endpoint: emarcotte-service-connection
     name: emarcotte/deployment-app-1
     type: github
-    ref: $(appVersion)
+    ref: refs/tags/$(appVersion)
 
 # No triggers for now
 trigger: none
