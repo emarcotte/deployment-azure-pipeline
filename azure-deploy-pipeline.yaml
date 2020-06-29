@@ -42,9 +42,10 @@ parameters:
 variables:
 - template: ./azure-variables/${{ parameters.deployEnvironment }}.yaml
 
-# Pull in the app source code repository
+# Pull in the app source code repository as well as the 'self' repo
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops
 resources:
-  repository:
+  repositories:
   - repository: AppRepo
     endpoint: emarcotte-service-connection
     name: emarcotte/deployment-app-1
